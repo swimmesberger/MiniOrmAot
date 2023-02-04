@@ -1,6 +1,6 @@
-﻿namespace MiniOrmAot.Common {
-    public enum PropertyMappingPolicy {
-        Undefined = 0,
-        SnakeCase = 1
-    }
+﻿namespace MiniOrmAot.Common; 
+
+public enum PropertyMappingPolicy {
+    Undefined = 0,
+    SnakeCase = 1
 }

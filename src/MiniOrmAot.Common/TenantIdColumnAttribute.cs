@@ -1,5 +1,5 @@
 ﻿using System;
 
-namespace MiniOrmAot.Common {
-    public class TenantIdColumnAttribute : Attribute { }
-}
+namespace MiniOrmAot.Common; 
+
+public class TenantIdColumnAttribute : Attribute { }

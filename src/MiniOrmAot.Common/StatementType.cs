@@ -1,9 +1,9 @@
-﻿namespace MiniOrmAot.Common {
-    public enum StatementType {
-        Find,
-        Count,
-        Create,
-        Update,
-        Delete
-    }
+﻿namespace MiniOrmAot.Common; 
+
+public enum StatementType {
+    Find,
+    Count,
+    Create,
+    Update,
+    Delete
 }

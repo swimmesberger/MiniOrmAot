@@ -1,9 +1,9 @@
-﻿namespace MiniOrmAot.Analyzers.Mapping {
-    public abstract class PropertyNamingPolicy {
-        public static PropertyNamingPolicy SnakeCase { get; } = new PropertySnakeCaseNamingPolicy();
+﻿namespace MiniOrmAot.Analyzers.Mapping; 
 
-        public abstract string PolicyName { get; }
+public abstract class PropertyNamingPolicy {
+    public static PropertyNamingPolicy SnakeCase { get; } = new PropertySnakeCaseNamingPolicy();
+
+    public abstract string PolicyName { get; }
         
-        public abstract string ConvertName(string name);
-    }
+    public abstract string ConvertName(string name);
 }

@@ -1,9 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <IsPackable>true</IsPackable>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>8.0</LangVersion>
+        <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
+
+        <!-- Special properties for analyzer packages. -->
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IncludeSymbols>false</IncludeSymbols>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <IsRoslynComponent>true</IsRoslynComponent>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>

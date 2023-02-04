@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace MiniOrmAot.Common {
-    public class SqlColumnNameAttribute : Attribute {
-        public string Value { get; }
+namespace MiniOrmAot.Common; 
 
-        public SqlColumnNameAttribute(string value) {
-            Value = value;
-        }
+public class SqlColumnNameAttribute : Attribute {
+    public string Value { get; }
+
+    public SqlColumnNameAttribute(string value) {
+        Value = value;
     }
 }
