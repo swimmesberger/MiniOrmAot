@@ -1,0 +1,18 @@
+﻿using {{ MapperNamespace }};
+{{ for namespace in UsingNamespaces ~}}
+using {{ namespace }};
+{{ end ~}}
+using System.CodeDom.Compiler;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace {{ Namespace }};
+
+[GeneratedCode(tool: "CaaS.Infrastructure.Generator", version: "{{ Version }}")]
+public static class DataRecordMapperServiceCollectionExtensions {
+    public static IServiceCollection AddDataRecordMapper(this IServiceCollection services) {
+{{ for mapper in Mappers ~}}
+        services.AddScoped<IDataRecordMapper<{{ mapper.EntityType }}>, {{ mapper.Name }}>();
+{{ end ~}}
+        return services;
+    }
+}

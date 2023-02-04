@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrmAot.Analyzers", "src\MiniOrmAot.Analyzers\MiniOrmAot.Analyzers.csproj", "{21FAF9E9-86F5-462F-9B1E-F1EC950F738E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrmAot.Test", "test\MiniOrmAot.Test\MiniOrmAot.Test.csproj", "{7B9E7675-4EB8-4235-8CDC-140F302CC8EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrmAot", "src\MiniOrmAot\MiniOrmAot.csproj", "{B3B1E618-50BE-4225-9E36-386906641160}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrmAot.Common", "src\MiniOrmAot.Common\MiniOrmAot.Common.csproj", "{58CCE83A-1006-48AE-92CA-4B976CFE028D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrmAot.Npgsql", "src\MiniOrmAot.Npgsql\MiniOrmAot.Npgsql.csproj", "{F0DB6D25-66B4-4658-ABC0-290D6EF22466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniOrmAot.Mapping", "src\MiniOrmAot.Mapping\MiniOrmAot.Mapping.csproj", "{5E6AC2F0-E8E6-4B7F-986A-20242718A12E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21FAF9E9-86F5-462F-9B1E-F1EC950F738E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21FAF9E9-86F5-462F-9B1E-F1EC950F738E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21FAF9E9-86F5-462F-9B1E-F1EC950F738E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21FAF9E9-86F5-462F-9B1E-F1EC950F738E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9E7675-4EB8-4235-8CDC-140F302CC8EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9E7675-4EB8-4235-8CDC-140F302CC8EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9E7675-4EB8-4235-8CDC-140F302CC8EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9E7675-4EB8-4235-8CDC-140F302CC8EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3B1E618-50BE-4225-9E36-386906641160}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3B1E618-50BE-4225-9E36-386906641160}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3B1E618-50BE-4225-9E36-386906641160}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3B1E618-50BE-4225-9E36-386906641160}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58CCE83A-1006-48AE-92CA-4B976CFE028D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58CCE83A-1006-48AE-92CA-4B976CFE028D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58CCE83A-1006-48AE-92CA-4B976CFE028D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58CCE83A-1006-48AE-92CA-4B976CFE028D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0DB6D25-66B4-4658-ABC0-290D6EF22466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0DB6D25-66B4-4658-ABC0-290D6EF22466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0DB6D25-66B4-4658-ABC0-290D6EF22466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0DB6D25-66B4-4658-ABC0-290D6EF22466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E6AC2F0-E8E6-4B7F-986A-20242718A12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E6AC2F0-E8E6-4B7F-986A-20242718A12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E6AC2F0-E8E6-4B7F-986A-20242718A12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E6AC2F0-E8E6-4B7F-986A-20242718A12E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

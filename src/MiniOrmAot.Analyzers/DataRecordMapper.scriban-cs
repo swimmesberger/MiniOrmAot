@@ -1,0 +1,235 @@
+﻿using {{ MapperNamespace }};
+using StatementType = {{ CommonNamespace }}.StatementType;
+using {{ Entity.Namespace }};
+using System.CodeDom.Compiler;
+using System.Data;
+using System.Data.Common;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Collections.Immutable;
+
+namespace {{ Namespace }};
+
+[GeneratedCode(tool: "CaaS.Infrastructure.Generator", version: "{{ Version }}")]
+public sealed class {{ Entity.EntityName }}DataRecordMapper : IDataRecordMapper<{{ Entity.TypeName }}>{{ if (Entity.TenantIdProperty) }}, ITenantIdProvider<{{ Entity.TypeName }}> {{ end }}{
+    private PropertyMetadata[] _properties = new PropertyMetadata[] {
+{{ for prop in Entity.Properties ~}}
+        new PropertyMetadata() {
+            PropertyName = "{{ prop.PropertyName }}",
+            ColumnName = "{{ prop.ColumnName }}",
+            TypeName = "{{ prop.TypeName }}",
+            IsJson = {{ prop.IsJson }},
+{{ if (prop.IgnoredStatementTypes)}}
+            IgnoredStatementTypes = ImmutableHashSet.Create(new[] {
+{{ for statementType in prop.IgnoredStatementTypes ~}}
+                (StatementType){{statementType}},
+{{ end ~}}
+            })
+{{ end }}
+        },
+{{ end ~}}
+    };
+    
+    public Type MappedType { get; } = typeof({{ Entity.TypeName }});
+    
+    public IRecordMetadataProvider MetadataProvider { get; }
+    
+    public IReadOnlyList<PropertyMetadata> Properties => _properties;
+    
+    private readonly IPropertyMapper _propertyMapper;
+    private readonly IPropertyMapper _columnMapper;
+    
+    public IPropertyMapper ByColumName() => _columnMapper;
+    
+    public IPropertyMapper ByPropertyName() => _propertyMapper;
+    
+    public {{ Entity.EntityName }}DataRecordMapper() {
+        _propertyMapper = new {{ Entity.EntityName }}PropertyToColumnMapper(Properties);
+        _columnMapper = new {{ Entity.EntityName }}ColumnToPropertyMapper(Properties);
+        MetadataProvider = RecordFromEntity(new {{ Entity.TypeName }}()).ByPropertyName();
+    }
+    
+    public async ValueTask<{{ Entity.TypeName }}> EntityFromRecordAsync(DbDataReader record, CancellationToken cancellationToken = default) {
+        return new {{ Entity.TypeName }} {
+{{ for prop in Entity.Properties ~}}
+{{ if (prop.TypeName == "ReadOnlyMemory<byte>") }}
+            {{ prop.PropertyName }} = await record.GetReadOnlyMemoryAsync("{{ prop.ColumnName }}", cancellationToken),
+{{ else if (prop.TypeName == "Memory<byte>") }}
+            {{ prop.PropertyName }} = await record.GetMemoryAsync("{{ prop.ColumnName }}", cancellationToken),
+{{ else }}
+            {{ prop.PropertyName }} = await record.GetValueAsync<{{ prop.TypeName }}>("{{ prop.ColumnName }}", cancellationToken),
+{{ end }}
+{{ end ~}}
+        };
+    }
+
+    public IRecord RecordFromEntity({{ Entity.TypeName }} record) 
+        => new {{ Entity.EntityName }}Record(record, this);
+        
+{{ if (Entity.TenantIdProperty) }}
+    public string TenantIdPropertyName { get; } = "{{ Entity.TenantIdProperty.PropertyName }}";
+    
+    public object GetTenantId({{ Entity.TypeName }} record) => record.{{ Entity.TenantIdProperty.PropertyName }};
+{{ end }}
+
+}
+
+internal sealed class {{ Entity.EntityName }}Record : IRecord {
+    private readonly {{ Entity.TypeName }} _record;
+    private readonly IPropertyMapping _propertyMapping;
+
+    public {{ Entity.EntityName }}Record ({{ Entity.TypeName }} record, IPropertyMapping propertyMapping) {
+        _record = record;
+        _propertyMapping = propertyMapping;
+    }
+
+    public IRecordValues ByColumName() => new {{ Entity.EntityName }}ColumnRecordValues(ByPropertyName(), _propertyMapping.ByColumName());
+
+    public IRecordValues ByPropertyName() => new {{ Entity.EntityName }}PropertyRecordValues(_record, _propertyMapping.ByPropertyName());
+}
+
+internal sealed class {{ Entity.EntityName }}PropertyRecordValues : IRecordValues {
+    private readonly {{ Entity.TypeName }} _record;
+    private readonly IPropertyMapper _mapper;
+    
+    public string TypeName => _mapper.TypeName;
+    public string MappedTypeName => _mapper.MappedTypeName;
+    public IEnumerable<string> Keys => _mapper.Keys;
+        
+    public {{Entity.EntityName}}PropertyRecordValues({{ Entity.TypeName }} record, IPropertyMapper mapper) {
+        _record = record;
+        _mapper = mapper;
+    }
+    
+    public bool IsSqlIgnored(string key, StatementType statementType) => _mapper.IsSqlIgnored(key, statementType);
+    
+    public string MapName(string key) => _mapper.MapName(key);
+    
+    public int? GetObjectType(string key) {
+        switch(key) {
+{{ for prop in Entity.Properties ~}}{{ if (prop.IsJson) }}            
+            case "{{ prop.PropertyName }}": return IRecordValues.DbTypeJson;
+{{ end }}{{ end ~}}
+            default: return null;
+        }
+    }
+    
+    public Type GetPropertyType(string key) {
+        switch(key){
+{{ for prop in Entity.Properties ~}}
+            case "{{ prop.PropertyName }}": return typeof({{ prop.TypeName }});
+{{ end ~}}
+            default: throw new ArgumentException($"Invalid property name {key}", nameof(key));
+        }
+    }
+        
+    public object? GetObject(string key) {
+        switch(key) {
+{{ for prop in Entity.Properties ~}}
+            case "{{ prop.PropertyName }}": return _record.{{ prop.PropertyName }};
+{{ end ~}}
+            default: return null;
+        }
+    }
+}
+
+internal sealed class {{ Entity.EntityName }}ColumnRecordValues : IRecordValues {
+    private readonly IRecordValues _record;
+    private readonly IPropertyMapper _mapper;
+    
+    public string TypeName => _mapper.TypeName;
+    public string MappedTypeName => _mapper.MappedTypeName;
+    public IEnumerable<string> Keys => _mapper.Keys;
+
+    public {{Entity.EntityName}}ColumnRecordValues(IRecordValues record, IPropertyMapper mapper) {
+        _record = record;
+        _mapper = mapper;
+    }
+    
+    public bool IsSqlIgnored(string key, StatementType statementType) => _mapper.IsSqlIgnored(key, statementType);
+    
+    public string MapName(string key) => _mapper.MapName(key);
+    
+    public Type GetPropertyType(string key) {
+        key = _mapper.MapName(key);
+        return _record.GetPropertyType(key);
+    }
+    
+    public int? GetObjectType(string key) {
+        key = _mapper.MapName(key);
+        return _record.GetObjectType(key);
+    }
+        
+    public object? GetObject(string key) {
+        key = _mapper.MapName(key);
+        return _record.GetObject(key);
+    }
+}
+
+internal sealed class {{ Entity.EntityName }}PropertyToColumnMapper : IPropertyMapper {
+    public string TypeName { get; } = "{{ Entity.EntityName }}";
+    public string MappedTypeName { get; } = "{{ Entity.TableName }}";
+
+    public IReadOnlyList<PropertyMetadata> Properties { get; } 
+    public IEnumerable<string> Keys => Properties.Select(p => p.PropertyName);
+    
+    public {{ Entity.EntityName }}PropertyToColumnMapper(IReadOnlyList<PropertyMetadata> properties) {
+        Properties = properties;
+    }
+                     
+    public bool IsSqlIgnored(string key, StatementType statementType) {
+{{ for prop in Entity.Properties ~}}
+{{ if (prop.IgnoredStatementTypes)}}
+{{ for statementType in prop.IgnoredStatementTypes ~}}
+        if ("{{ prop.PropertyName }}".Equals(key) && statementType.Equals((StatementType){{statementType}})) {
+            return true;
+        }
+{{ end ~}}
+{{ end }}
+{{ end ~}}
+        return false;
+    }
+    
+    public string MapName(string key) {
+        switch(key){
+{{ for prop in Entity.Properties ~}}
+            case "{{ prop.PropertyName }}": return "{{ prop.ColumnName }}";
+{{ end ~}}
+            default: throw new ArgumentException($"Invalid property name {key}", nameof(key));
+        }
+    }
+}
+
+internal sealed class {{ Entity.EntityName }}ColumnToPropertyMapper : IPropertyMapper {
+    public string TypeName { get; } = "{{ Entity.TableName }}";
+    public string MappedTypeName { get; } = "{{ Entity.EntityName }}";
+        
+    public IReadOnlyList<PropertyMetadata> Properties { get; } 
+    public IEnumerable<string> Keys => Properties.Select(p => p.ColumnName);
+    
+    public {{ Entity.EntityName }}ColumnToPropertyMapper(IReadOnlyList<PropertyMetadata> properties) {
+        Properties = properties;
+    }
+    
+    public bool IsSqlIgnored(string key, StatementType statementType) {
+{{ for prop in Entity.Properties ~}}
+{{ if (prop.IgnoredStatementTypes)}}
+{{ for statementType in prop.IgnoredStatementTypes ~}}
+        if ("{{ prop.ColumnName }}".Equals(key) && statementType.Equals((StatementType){{statementType}})) {
+            return true;
+        }
+{{ end ~}}
+{{ end }}
+{{ end ~}}
+        return false;
+    }
+    
+    public string MapName(string key) {
+        switch(key) {
+{{ for prop in Entity.Properties ~}}
+            case "{{ prop.ColumnName }}": return "{{ prop.PropertyName }}";
+{{ end ~}}
+            default: throw new ArgumentException($"Invalid column name {key}", nameof(key));
+        }
+    }
+}
