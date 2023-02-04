@@ -10,7 +10,7 @@ using System.Collections.Immutable;
 
 namespace {{ Namespace }};
 
-[GeneratedCode(tool: "CaaS.Infrastructure.Generator", version: "{{ Version }}")]
+[GeneratedCode(tool: "{{ GenerateNamespace }}", version: "{{ Version }}")]
 public sealed class {{ Entity.EntityName }}DataRecordMapper : IDataRecordMapper<{{ Entity.TypeName }}>{{ if (Entity.TenantIdProperty) }}, ITenantIdProvider<{{ Entity.TypeName }}> {{ end }}{
     private PropertyMetadata[] _properties = new PropertyMetadata[] {
 {{ for prop in Entity.Properties ~}}

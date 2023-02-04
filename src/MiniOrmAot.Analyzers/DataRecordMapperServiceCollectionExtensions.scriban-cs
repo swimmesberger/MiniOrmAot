@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace {{ Namespace }};
 
-[GeneratedCode(tool: "CaaS.Infrastructure.Generator", version: "{{ Version }}")]
+[GeneratedCode(tool: "{{ GenerateNamespace }}", version: "{{ Version }}")]
 public static class DataRecordMapperServiceCollectionExtensions {
     public static IServiceCollection AddDataRecordMapper(this IServiceCollection services) {
 {{ for mapper in Mappers ~}}
